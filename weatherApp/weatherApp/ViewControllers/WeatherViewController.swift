@@ -52,6 +52,8 @@ class WeatherViewController: UIViewController {
             do {
                 let data = try currentWeather()
                 self.updateInterfaceWith(weather: data)
+            } catch ErrorType.cityNotFound {
+                self.handlerError(for: ErrorType.cityNotFound)
             } catch {
                 self.handlerError(for: ErrorType.internalServerError)
             }

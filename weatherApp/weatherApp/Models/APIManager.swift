@@ -7,33 +7,30 @@
 
 import Foundation
 import CoreLocation
+import Alamofire
 
 class APIManager {
     static let shared = APIManager()
     
     func getCurrentWeather(for requestType: ApiType, completion: @escaping (_: () throws -> CurrentWeather) -> ()) {
-        let request = requestType.request
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        AF.request(requestType.url, method: requestType.method, headers: requestType.headers)
+        .validate()
+        .responseDecodable(of: WeatherData.self) { data in
             completion({
-                if error != nil {
-                    throw ErrorType.internalServerError
+                switch data.result {
+                case .success(let value):
+                    guard let currentWeather = CurrentWeather(currentWeatherData: value) else{ throw ErrorType.unexpectedError }
+                    return currentWeather
+                case .failure(let error):
+                    if error.responseCode == 404 {
+                        throw ErrorType.cityNotFound
+                    } else if error.responseCode == 400 {
+                        throw ErrorType.validationError
+                    } else {
+                        throw ErrorType.internalServerError
+                    }
                 }
-                guard let data = data else { throw ErrorType.validationError }
-                guard let currentWeather = try? self.parseJSON(data: data) else { throw ErrorType.validationError
-                }
-                return currentWeather
             })
-        }.resume()
+        }
     }
 }
-
-//MARK: private functions
-private extension APIManager {
-    func parseJSON(data: Data) throws -> CurrentWeather? {
-        guard let currentWeatherData = try? JSONDecoder().decode(WeatherData.self, from: data) else { throw ErrorType.validationError }
-        guard let currentWeather = CurrentWeather(currentWeatherData: currentWeatherData) else { return nil }
-        return currentWeather
-    }
-}
-
-
