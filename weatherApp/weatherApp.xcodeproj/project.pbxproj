@@ -15,7 +15,7 @@
 		9ECAFF062A2B751D00C61AA9 /* WeatherViewController+alertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFF052A2B751D00C61AA9 /* WeatherViewController+alertController.swift */; };
 		9ECAFF082A2B758E00C61AA9 /* ContentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFF072A2B758E00C61AA9 /* ContentData.swift */; };
 		9ECAFF0A2A2BC4EC00C61AA9 /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFF092A2BC4EC00C61AA9 /* CurrentWeather.swift */; };
-		9ECAFF0E2A2FA38000C61AA9 /* TestInternetConnectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionModel.swift */; };
+		9ECAFF0E2A2FA38000C61AA9 /* TestInternetConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionManager.swift */; };
 		9ECAFF102A2FDF6C00C61AA9 /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFF0F2A2FDF6C00C61AA9 /* ErrorData.swift */; };
 		9EF852DC2A267E2C00AC6567 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF852DB2A267E2C00AC6567 /* AppDelegate.swift */; };
 		9EF852DE2A267E2C00AC6567 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF852DD2A267E2C00AC6567 /* SceneDelegate.swift */; };
@@ -56,7 +56,7 @@
 		9ECAFF052A2B751D00C61AA9 /* WeatherViewController+alertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeatherViewController+alertController.swift"; sourceTree = "<group>"; };
 		9ECAFF072A2B758E00C61AA9 /* ContentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentData.swift; sourceTree = "<group>"; };
 		9ECAFF092A2BC4EC00C61AA9 /* CurrentWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
-		9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternetConnectionModel.swift; sourceTree = "<group>"; };
+		9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternetConnectionManager.swift; sourceTree = "<group>"; };
 		9ECAFF0F2A2FDF6C00C61AA9 /* ErrorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorData.swift; sourceTree = "<group>"; };
 		9EF852D82A267E2C00AC6567 /* weatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF852DB2A267E2C00AC6567 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -120,6 +120,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9ECAFF112A3120B700C61AA9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionManager.swift */,
+				9ECAFEFD2A2B704800C61AA9 /* APIManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		9EF852CF2A267E2C00AC6567 = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +154,7 @@
 		9EF852DA2A267E2C00AC6567 /* weatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				9ECAFF112A3120B700C61AA9 /* Services */,
 				9EF8530F2A267EA900AC6567 /* Extensions */,
 				9EF8530E2A267E9B00AC6567 /* Supporting */,
 				9EF8530D2A267E7300AC6567 /* Views */,
@@ -176,11 +186,9 @@
 			children = (
 				9EF853122A26AD8700AC6567 /* SupportData.swift */,
 				9ECAFEFB2A28F49A00C61AA9 /* APIData.swift */,
-				9ECAFEFD2A2B704800C61AA9 /* APIManager.swift */,
 				9ECAFEFF2A2B729A00C61AA9 /* WeatherData.swift */,
 				9ECAFF072A2B758E00C61AA9 /* ContentData.swift */,
 				9ECAFF092A2BC4EC00C61AA9 /* CurrentWeather.swift */,
-				9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionModel.swift */,
 				9ECAFF0F2A2FDF6C00C61AA9 /* ErrorData.swift */,
 			);
 			path = Models;
@@ -409,7 +417,7 @@
 				9ECAFF002A2B729A00C61AA9 /* WeatherData.swift in Sources */,
 				9ECAFF062A2B751D00C61AA9 /* WeatherViewController+alertController.swift in Sources */,
 				9ECAFEFE2A2B704800C61AA9 /* APIManager.swift in Sources */,
-				9ECAFF0E2A2FA38000C61AA9 /* TestInternetConnectionModel.swift in Sources */,
+				9ECAFF0E2A2FA38000C61AA9 /* TestInternetConnectionManager.swift in Sources */,
 				9ECAFF0A2A2BC4EC00C61AA9 /* CurrentWeather.swift in Sources */,
 				9ECAFF102A2FDF6C00C61AA9 /* ErrorData.swift in Sources */,
 				9ECAFF022A2B72E400C61AA9 /* Constants.swift in Sources */,
