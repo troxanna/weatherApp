@@ -12,8 +12,9 @@ class WeatherView: UIView {
 
     private let weatherImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: Images.cloudRain.text)
+        imageView.image = UIImage(systemName: Images.WeatherIcons.none.text)
         imageView.tintColor = UIColor(named: Colors.infoColor.text)
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -64,23 +65,13 @@ class WeatherView: UIView {
     
     private let cityLabel: UILabel = {
         let label = UILabel()
-        label.text = "City"
         label.font = UIFont.systemFont(ofSize: 28, weight: .medium)
         label.textColor = UIColor(named: Colors.infoColor.text)
         return label
     }()
     
-    private let searchCityButton: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: Images.search.text), for: .normal)
-        button.backgroundColor = .clear
-        button.tintColor = UIColor(named: Colors.infoColor.text)
-        return button
-    }()
-    
     private let valueDegreesLabel: UILabel = {
         let label = UILabel()
-        label.text = "26"
         label.font = UIFont.systemFont(ofSize: 70, weight: .black)
         label.textColor = UIColor(named: Colors.infoColor.text)
         return label
@@ -88,8 +79,8 @@ class WeatherView: UIView {
     
     private let unitDegreesLabel: UILabel = {
         let label = UILabel()
-        label.text = "°C"
         label.font = UIFont.systemFont(ofSize: 70, weight: .regular)
+        label.text = "°C"
         label.textColor = UIColor(named: Colors.infoColor.text)
         return label
     }()
@@ -104,11 +95,20 @@ class WeatherView: UIView {
     
     private let feelsLikeDegreesLabel: UILabel = {
         let label = UILabel()
-        label.text = "23 °C"
+        label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = UIColor(named: Colors.infoColor.text)
         return label
     }()
+    
+    let searchCityButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: Images.search.text), for: .normal)
+        button.backgroundColor = .clear
+        button.tintColor = UIColor(named: Colors.infoColor.text)
+        return button
+    }()
+    
     
     init() {
         super.init(frame: .zero)
@@ -125,10 +125,10 @@ private extension WeatherView {
     func setup() {
         backgroundColor = .clear
         
-        searchCityButton.snp.makeConstraints({ make in
+        searchCityButton.snp.makeConstraints { make in
             make.width.equalTo(30)
             make.height.equalTo(30)
-        })
+        }
         stackViewCity.addArrangedSubview(cityLabel)
         stackViewCity.addArrangedSubview(searchCityButton)
         
@@ -138,10 +138,10 @@ private extension WeatherView {
             make.trailing.equalTo(self.snp.trailing).inset(16)
         }
         
-        weatherImageView.snp.makeConstraints({ make in
+        weatherImageView.snp.makeConstraints { make in
             make.width.equalTo(170)
             make.height.equalTo(170)
-        })
+        }
         
         stackViewFeelsLike.addArrangedSubview(feelsLikeTextLabel)
         stackViewFeelsLike.addArrangedSubview(feelsLikeDegreesLabel)
@@ -157,11 +157,33 @@ private extension WeatherView {
 
         self.addSubview(stackViewWeather)
         
-        stackViewWeather.snp.makeConstraints({ make in
+        stackViewWeather.snp.makeConstraints { make in
             make.centerX.equalTo(self.snp.centerX)
             make.top.equalTo(self.snp.top).inset(20)
-        })
+        }
+    }
+}
 
-
+//MARK: public functions
+extension WeatherView {
+    func insertData(currentWeather: CurrentWeather) {
+        cityLabel.text = currentWeather.cityName
+        valueDegreesLabel.text = currentWeather.temperatureString
+        feelsLikeDegreesLabel.text = currentWeather.feelsLikeTemperatureString
+        weatherImageView.image = UIImage(systemName: currentWeather.systemIconNameString)
+        
+        unitDegreesLabel.isHidden = false
+        feelsLikeTextLabel.isHidden = false
+        valueDegreesLabel.isHidden = false
+    }
+    
+    func showInfoForError(type: ErrorType) {
+        cityLabel.text = ""
+        feelsLikeDegreesLabel.text = type.message
+        weatherImageView.image = UIImage(systemName: Images.WeatherIcons.none.text)
+        
+        unitDegreesLabel.isHidden = true
+        feelsLikeTextLabel.isHidden = true
+        valueDegreesLabel.isHidden = true
     }
 }

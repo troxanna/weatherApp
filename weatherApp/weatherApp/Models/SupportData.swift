@@ -10,17 +10,24 @@ import Foundation
 enum Images: String {
     case background
     case search = "magnifyingglass.circle.fill"
-    case cloudRain = "cloud.rain.fill"
     
-    var text: String {
-        switch self {
-        case .background:
-            return self.rawValue
-        case .search:
-            return self.rawValue
-        case .cloudRain:
+    enum WeatherIcons: String {
+        case rain = "cloud.rain.fill"
+        case bolt = "cloud.bolt.rain.fill"
+        case drizzle = "cloud.drizzle.fill"
+        case snow = "cloud.snow.fill"
+        case smoke = "smoke.fill"
+        case sun = "sun.min.fill"
+        case cloud = "cloud.fill"
+        case none = "nosign"
+        
+        var text: String {
             return self.rawValue
         }
+    }
+    
+    var text: String {
+        return self.rawValue
     }
 }
 
@@ -28,9 +35,8 @@ enum Colors: String {
     case infoColor
     
     var text: String {
-        switch self {
-        case .infoColor:
-            return self.rawValue
-        }
+        return self.rawValue
     }
 }
+
+
