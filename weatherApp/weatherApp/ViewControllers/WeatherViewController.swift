@@ -13,6 +13,7 @@ class WeatherViewController: UIViewController {
     private let weatherView: WeatherView = {
         let view = WeatherView()
         view.searchCityButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
+        view.activateLocationButton.addTarget(self, action: #selector(activateLocationButtonPressed), for: .touchUpInside)
         return view
     }()
     
@@ -38,9 +39,7 @@ class WeatherViewController: UIViewController {
         if currentReachabilityStatus == .notReachable {
             self.handlerError(for: ErrorType.networkError)
         } else {
-            if CLLocationManager.locationServicesEnabled() {
-                self.locationManager.requestLocation()
-            }
+            locationManager.startUpdatingLocation()
         }
     }
     
@@ -108,6 +107,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
         let longitude = location.coordinate.longitude
         
         APIManager.shared.getCurrentWeather(for: ApiType.getWeatherByCoordinate(latitude: latitude, longitude: longitude), completion: onCompletion)
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -124,6 +124,10 @@ private extension WeatherViewController {
             self.weatherView.showInfoForError(type: type)
             self.weatherView.isHidden = false
         }
+    }
+    
+    @objc func activateLocationButtonPressed() {
+        UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
     }
 }
 

@@ -109,6 +109,15 @@ class WeatherView: UIView {
         return button
     }()
     
+    let activateLocationButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Включить геолокацию", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.backgroundColor = UIColor(named: Colors.infoColor.text)
+        button.setTitleColor(.black, for: .normal)
+        return button
+    }()
+    
     
     init() {
         super.init(frame: .zero)
@@ -161,6 +170,13 @@ private extension WeatherView {
             make.centerX.equalTo(self.snp.centerX)
             make.top.equalTo(self.snp.top).inset(20)
         }
+        
+        self.addSubview(activateLocationButton)
+        activateLocationButton.snp.makeConstraints { make in
+            make.top.equalTo(stackViewWeather.snp.bottom).offset(20)
+            make.centerX.equalTo(self.snp.centerX)
+            make.width.equalTo(stackViewWeather.snp.width)
+        }
     }
 }
 
@@ -175,6 +191,7 @@ extension WeatherView {
         unitDegreesLabel.isHidden = false
         feelsLikeTextLabel.isHidden = false
         valueDegreesLabel.isHidden = false
+        activateLocationButton.isHidden = true
     }
     
     func showInfoForError(type: ErrorType) {
@@ -185,5 +202,9 @@ extension WeatherView {
         unitDegreesLabel.isHidden = true
         feelsLikeTextLabel.isHidden = true
         valueDegreesLabel.isHidden = true
+        activateLocationButton.isHidden = true
+        if type == ErrorType.locationDisabled {
+            activateLocationButton.isHidden = false
+        }
     }
 }
