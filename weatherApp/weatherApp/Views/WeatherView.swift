@@ -122,6 +122,8 @@ class WeatherView: UIView {
     init() {
         super.init(frame: .zero)
         setup()
+        self.isHidden = true
+        activateLocationButton.isHidden = true
     }
     
     required init?(coder: NSCoder) {
@@ -177,6 +179,7 @@ private extension WeatherView {
             make.centerX.equalTo(self.snp.centerX)
             make.width.equalTo(stackViewWeather.snp.width)
         }
+        
     }
 }
 

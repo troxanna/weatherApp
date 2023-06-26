@@ -6,10 +6,21 @@
 //
 
 import UIKit
-import CoreLocation
 
 class WeatherViewController: UIViewController {
 
+    private let loader: UIAlertController = {
+        let alert = UIAlertController(title: nil, message: "please wait...", preferredStyle: .alert)
+        return alert
+    }()
+    
+    private let indicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        indicator.hidesWhenStopped = true
+        indicator.style = .large
+        return indicator
+    }()
+    
     private let weatherView: WeatherView = {
         let view = WeatherView()
         view.searchCityButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
@@ -23,36 +34,37 @@ class WeatherViewController: UIViewController {
         return imageView
     }()
     
-    lazy var locationManager: CLLocationManager = {
-        let lm = CLLocationManager()
-        lm.delegate = self
-        lm.desiredAccuracy = kCLLocationAccuracyKilometer
-        lm.requestWhenInUseAuthorization()
-        return lm
-    }()
-    
     var onCompletion: (() throws -> CurrentWeather) -> () = {_ in }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if currentReachabilityStatus == .notReachable {
-            self.handlerError(for: ErrorType.networkError)
-        } else {
-            locationManager.startUpdatingLocation()
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        onCompletion = { [weak self] currentWeather in
-            guard let self = self else { return }
-            do {
-                let data = try currentWeather()
-                self.updateInterfaceWith(weather: data)
-            } catch {
-                self.handlerError(for: ErrorType.internalServerError)
+        setupOnCompletion()
+    
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        startLoader()
+        if currentReachabilityStatus == .notReachable {
+            self.handlerError(for: ErrorType.networkError)
+        } else {
+            LocationManager.shared.getUsersLocation { [weak self] location in
+                guard let self = self else { return }
+                do {
+                    guard let locations = location else { throw ErrorType.locationDisabled }
+                    let latitude = locations.coordinate.latitude
+                    let longitude = locations.coordinate.longitude
+                    
+                    APIManager.shared.getCurrentWeather(for: ApiType.getWeatherByCoordinate(latitude: latitude, longitude: longitude), completion: self.onCompletion)
+                } catch {
+                    self.handlerError(for: ErrorType.locationDisabled)
+                    DispatchQueue.main.async {
+                        self.stopLoader()
+                        self.weatherView.isHidden = false
+                    }
+                }
+                
             }
         }
     }
@@ -71,13 +83,13 @@ private extension WeatherViewController {
         }
         
         view.addSubview(weatherView)
-        weatherView.isHidden = true
         weatherView.snp.makeConstraints { make in
             make.top.equalTo(view.snp.top).inset(view.safeAreaInsets.top)
             make.bottom.equalTo(view.snp.bottom).inset(view.safeAreaInsets.bottom)
             make.trailing.equalTo(view.snp.trailing)
             make.leading.equalTo(view.snp.leading)
         }
+        loader.view.addSubview(indicator)
     }
     
     @objc func searchButtonPressed() {
@@ -94,27 +106,25 @@ private extension WeatherViewController {
     func updateInterfaceWith(weather: CurrentWeather) {
         DispatchQueue.main.async {
             self.weatherView.insertData(currentWeather: weather)
-            self.weatherView.isHidden = false
         }
-    }
-}
-
-//MARK: CLLocationManagerDelegate
-extension WeatherViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        let latitude = location.coordinate.latitude
-        let longitude = location.coordinate.longitude
-        
-        APIManager.shared.getCurrentWeather(for: ApiType.getWeatherByCoordinate(latitude: latitude, longitude: longitude), completion: onCompletion)
-        
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        DispatchQueue.main.async {
-            self.handlerError(for: ErrorType.locationDisabled)
+    func setupOnCompletion() {
+        onCompletion = { [weak self] currentWeather in
+            guard let self = self else { return }
+            do {
+                let data = try currentWeather()
+                self.updateInterfaceWith(weather: data)
+            } catch {
+                self.handlerError(for: ErrorType.internalServerError)
+            }
+            DispatchQueue.main.async {
+                self.stopLoader()
+                self.weatherView.isHidden = false
+            }
         }
     }
+    
 }
 
 //MARK: HandlerError
@@ -122,7 +132,6 @@ private extension WeatherViewController {
     func handlerError(for type: ErrorType) {
         DispatchQueue.main.async {
             self.weatherView.showInfoForError(type: type)
-            self.weatherView.isHidden = false
         }
     }
     
@@ -131,3 +140,15 @@ private extension WeatherViewController {
     }
 }
 
+//MARK: Loader
+private extension WeatherViewController {
+    func startLoader() {
+        indicator.startAnimating()
+        self.present(loader, animated: true)
+    }
+    
+    func stopLoader() {
+        indicator.stopAnimating()
+        self.loader.dismiss(animated: true)
+    }
+}

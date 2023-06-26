@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		72719724D088B745C0143C05 /* Pods_weatherApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FE4FF6581A3A222DF32D81 /* Pods_weatherApp.framework */; };
+		9E30DA652A46F7440059DEF7 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E30DA642A46F7440059DEF7 /* LocationManager.swift */; };
 		9ECAFEFC2A28F49A00C61AA9 /* APIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFEFB2A28F49A00C61AA9 /* APIData.swift */; };
 		9ECAFEFE2A2B704800C61AA9 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFEFD2A2B704800C61AA9 /* APIManager.swift */; };
 		9ECAFF002A2B729A00C61AA9 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAFEFF2A2B729A00C61AA9 /* WeatherData.swift */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		65FE4FF6581A3A222DF32D81 /* Pods_weatherApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_weatherApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E30DA642A46F7440059DEF7 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		9ECAFEFB2A28F49A00C61AA9 /* APIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIData.swift; sourceTree = "<group>"; };
 		9ECAFEFD2A2B704800C61AA9 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		9ECAFEFF2A2B729A00C61AA9 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 			children = (
 				9ECAFF0D2A2FA38000C61AA9 /* TestInternetConnectionManager.swift */,
 				9ECAFEFD2A2B704800C61AA9 /* APIManager.swift */,
+				9E30DA642A46F7440059DEF7 /* LocationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 			files = (
 				9EF852E02A267E2C00AC6567 /* WeatherViewController.swift in Sources */,
 				9ECAFF082A2B758E00C61AA9 /* ContentData.swift in Sources */,
+				9E30DA652A46F7440059DEF7 /* LocationManager.swift in Sources */,
 				9EF853132A26AD8700AC6567 /* SupportData.swift in Sources */,
 				9EF852DC2A267E2C00AC6567 /* AppDelegate.swift in Sources */,
 				9EF852DE2A267E2C00AC6567 /* SceneDelegate.swift in Sources */,
