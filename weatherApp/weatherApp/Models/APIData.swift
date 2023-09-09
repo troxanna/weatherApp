@@ -7,23 +7,24 @@
 
 import Foundation
 import CoreLocation
+import Alamofire
 
 enum ApiType {
     case getWeatherByCityName(city: String)
     case getWeatherByCoordinate(latitude: CLLocationDegrees, longitude: CLLocationDegrees)
-    
+        
     var baseURL: String {
         return "https://api.openweathermap.org/data/2.5/"
     }
     
-    var headers: [String : String] {
-            return ["Content-Type": "application/json"]
+    var headers: HTTPHeaders {
+            return HTTPHeaders(["Content-Type": "application/json"])
     }
-    
+        
     var path: String {
             return "weather"
     }
-    
+        
     var query: String {
         switch self {
         case .getWeatherByCityName(city: let city):
@@ -32,13 +33,12 @@ enum ApiType {
             return "lat=\(latitude)&lon=\(longitude)&appid=\(appId)&units=metric"
         }
     }
-    
-    var request: URLRequest {
-        let urlString = "\(baseURL)\(path)?\(query)"
-        let url = URL(string: urlString)!
-        var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = headers
-        request.httpMethod = "GET"
-        return request
+
+    var method: HTTPMethod {
+        return HTTPMethod(rawValue: "get")
+    }
+        
+    var url: String {
+        return "\(baseURL)\(path)?\(query)"
     }
 }

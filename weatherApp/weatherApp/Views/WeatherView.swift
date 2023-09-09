@@ -10,7 +10,7 @@ import SnapKit
 
 class WeatherView: UIView {
 
-    private let weatherImageView: UIImageView = {
+    lazy private var weatherImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: Images.WeatherIcons.none.text)
         imageView.tintColor = UIColor(named: Colors.infoColor.text)
@@ -18,7 +18,7 @@ class WeatherView: UIView {
         return imageView
     }()
     
-    private let stackViewCity: UIStackView = {
+    lazy private var stackViewCity: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
@@ -27,7 +27,7 @@ class WeatherView: UIView {
         return stackView
     }()
     
-    private let stackViewWeather: UIStackView = {
+    lazy private var stackViewWeather: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .center
@@ -36,7 +36,7 @@ class WeatherView: UIView {
         return stackView
     }()
     
-    private let stackViewDegrees: UIStackView = {
+    lazy private var stackViewDegrees: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
@@ -45,7 +45,7 @@ class WeatherView: UIView {
         return stackView
     }()
     
-    private let stackViewFeelsLike: UIStackView = {
+    lazy private var stackViewFeelsLike: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
@@ -54,7 +54,7 @@ class WeatherView: UIView {
         return stackView
     }()
     
-    private let stackViewDegreesAndFeelsLike: UIStackView = {
+    lazy private var stackViewDegreesAndFeelsLike: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .trailing
@@ -63,21 +63,21 @@ class WeatherView: UIView {
         return stackView
     }()
     
-    private let cityLabel: UILabel = {
+    lazy private var cityLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .medium)
         label.textColor = UIColor(named: Colors.infoColor.text)
         return label
     }()
     
-    private let valueDegreesLabel: UILabel = {
+    lazy private var valueDegreesLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 70, weight: .black)
         label.textColor = UIColor(named: Colors.infoColor.text)
         return label
     }()
     
-    private let unitDegreesLabel: UILabel = {
+    lazy private var unitDegreesLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 70, weight: .regular)
         label.text = "°C"
@@ -85,7 +85,7 @@ class WeatherView: UIView {
         return label
     }()
     
-    private let feelsLikeTextLabel: UILabel = {
+    lazy private var feelsLikeTextLabel: UILabel = {
         let label = UILabel()
         label.text = "Feels like"
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -93,11 +93,20 @@ class WeatherView: UIView {
         return label
     }()
     
-    private let feelsLikeDegreesLabel: UILabel = {
+    lazy private var feelsLikeDegreesLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = UIColor(named: Colors.infoColor.text)
+        return label
+    }()
+    
+    lazy private var errorMessage: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.textColor = UIColor(named: Colors.infoColor.text)
+        label.isHidden = true
         return label
     }()
     
@@ -180,6 +189,11 @@ private extension WeatherView {
             make.width.equalTo(stackViewWeather.snp.width)
         }
         
+        self.addSubview(errorMessage)
+        errorMessage.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(weatherImageView.snp.bottom).offset(20)
+        }
     }
 }
 
@@ -191,23 +205,25 @@ extension WeatherView {
         feelsLikeDegreesLabel.text = currentWeather.feelsLikeTemperatureString
         weatherImageView.image = UIImage(systemName: currentWeather.systemIconNameString)
         
-        unitDegreesLabel.isHidden = false
-        feelsLikeTextLabel.isHidden = false
-        valueDegreesLabel.isHidden = false
+        stackViewDegreesAndFeelsLike.isHidden = false
+        errorMessage.isHidden = true
         activateLocationButton.isHidden = true
     }
     
     func showInfoForError(type: ErrorType) {
-        cityLabel.text = ""
-        feelsLikeDegreesLabel.text = type.message
+        errorMessage.text = type.message
         weatherImageView.image = UIImage(systemName: Images.WeatherIcons.none.text)
         
-        unitDegreesLabel.isHidden = true
-        feelsLikeTextLabel.isHidden = true
-        valueDegreesLabel.isHidden = true
+        stackViewDegreesAndFeelsLike.isHidden = true
+        errorMessage.isHidden = false
         activateLocationButton.isHidden = true
-        if type == ErrorType.locationDisabled {
+        
+        
+        switch type {
+        case ErrorType.locationDisabled:
             activateLocationButton.isHidden = false
+        default:
+            return
         }
     }
 }

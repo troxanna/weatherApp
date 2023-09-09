@@ -9,30 +9,32 @@ import UIKit
 
 class WeatherViewController: UIViewController {
 
-    private let loader: UIAlertController = {
+    lazy private var loader: UIAlertController = {
         let alert = UIAlertController(title: nil, message: "please wait...", preferredStyle: .alert)
         return alert
     }()
     
-    private let indicator: UIActivityIndicatorView = {
+    lazy private var indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
         indicator.hidesWhenStopped = true
         indicator.style = .large
         return indicator
     }()
     
-    private let weatherView: WeatherView = {
+    lazy private var weatherView: WeatherView = {
         let view = WeatherView()
         view.searchCityButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
         view.activateLocationButton.addTarget(self, action: #selector(activateLocationButtonPressed), for: .touchUpInside)
         return view
     }()
     
-    private let imageView: UIImageView = {
+    lazy private var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: Images.background.text)
         return imageView
     }()
+    
+    private var cityName: String? = nil
     
     var onCompletion: (() throws -> CurrentWeather) -> () = {_ in }
     
@@ -95,6 +97,7 @@ private extension WeatherViewController {
     @objc func searchButtonPressed() {
         presentSearchAlertController { [weak self] cityName in
             guard let self = self else { return }
+            self.cityName = cityName
             if self.currentReachabilityStatus == .notReachable {
                 self.handlerError(for: ErrorType.networkError)
             } else {
@@ -115,7 +118,11 @@ private extension WeatherViewController {
             do {
                 let data = try currentWeather()
                 self.updateInterfaceWith(weather: data)
-            } catch {
+            }
+            catch ErrorType.cityNotFound {
+                self.handlerError(for: ErrorType.cityNotFound(cityName))
+            }
+            catch {
                 self.handlerError(for: ErrorType.internalServerError)
             }
             DispatchQueue.main.async {
